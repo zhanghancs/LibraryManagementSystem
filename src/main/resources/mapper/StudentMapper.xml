@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.StudentMapper">
+    <update id="update">
+        update student
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="idNumber != null">
+                idNumber = #{idNumber},
+            </if>
+            <if test="chosenCredits != null">
+                chosenCredits = #{chosenCredits},
+            </if>
+            <if test="earnedCredits != null">
+                earnedCredits = #{earnedCredits},
+            </if>
+        </set>
+        <where>
+            studentId = #{studentId}
+        </where>
+    </update>
+</mapper>

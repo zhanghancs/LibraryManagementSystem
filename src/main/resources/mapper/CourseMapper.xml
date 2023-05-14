@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.CourseMapper">
+    <update id="update">
+        update course
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="teacherId != null">
+                teacherId = #{teacherId},
+            </if>
+            <if test="tim != null">
+                tim = #{tim},
+            </if>
+            <if test="room != null">
+                room = #{room},
+            </if>
+            <if test="capacity != null">
+                capacity = #{capacity},
+            </if>
+            <if test="credits != null">
+                credits = #{credits},
+            </if>
+        </set>
+        <where>
+            courseId = #{courseId}
+        </where>
+    </update>
+</mapper>
