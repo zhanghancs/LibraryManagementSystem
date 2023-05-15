@@ -18,6 +18,7 @@ public class StudentService {
     }
 
     public Student checkById(String studentId) {
+        if (!isValidId(studentId)) return null;
         return studentMapper.checkById(studentId);
     }
 
@@ -44,7 +45,7 @@ public class StudentService {
 
     public List<Student> checkByPage(Integer page, Integer size) {
         List<Student> studentList = studentMapper.checkAll();
-        ArrayList<Student> list = new ArrayList<Student>();
+        ArrayList<Student> list = new ArrayList<>();
         int sz = studentList.size();
         int start = size * page;
         int end = size * (page + 1) < sz ? size*(page + 1) : sz;
@@ -52,5 +53,12 @@ public class StudentService {
             list.add(studentList.get(i));
         }
         return list;
+    }
+
+    public boolean isValidId(String id) {
+        if (id.startsWith("000") || id.startsWith("001")) {
+            return false;
+        }
+        return true;
     }
 }

@@ -26,6 +26,11 @@ public class EnrollmentController {
         return enrollmentService.checkCourse(studentId);
     }
 
+    @GetMapping("checkCanChooseCourse/{studentId}/{type}")
+    public List<Course> checkCanChooseCourse(@PathVariable String studentId, @PathVariable String type) {
+        return enrollmentService.checkCanChooseCourse(studentId, type);
+    }
+
     @GetMapping("checkStudent/{courseId}")
     public List<Student> checkStudent(@PathVariable String courseId) {
        return enrollmentService.checkStudent(courseId);

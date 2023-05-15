@@ -19,6 +19,7 @@ public class TeacherService {
     }
 
     public Teacher checkById(String teacherId) {
+        if (!isValidId(teacherId)) return null;
         return teacherMapper.checkById(teacherId);
     }
 
@@ -55,5 +56,11 @@ public class TeacherService {
             list.add(teacherList.get(i));
         }
         return list;
+    }
+    public boolean isValidId(String id) {
+        if (id.startsWith("001")) {
+            return true;
+        }
+        return false;
     }
 }

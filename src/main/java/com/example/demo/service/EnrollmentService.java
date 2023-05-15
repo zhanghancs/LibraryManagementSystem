@@ -46,4 +46,18 @@ public class EnrollmentService {
     public boolean deleteOne(Enrollment enrollment){
         return enrollmentMapper.deleteOne(enrollment);
     }
+
+    public List<Course> checkCanChooseCourse(String studentId, String type) {
+        List<Course> courseList = courseMapper.checkAll();
+        List<Course> courses = new ArrayList<>();
+        // 入学年份
+        Integer year = Integer.parseInt(studentId.substring(3,5));
+        // 年级
+        Integer grade = Integer.parseInt(type.substring(0,2)) - year + 1;
+        Integer semester = type.charAt(2) - '0';
+        for (Course item : courseList) {
+
+        }
+        return courses;
+    }
 }

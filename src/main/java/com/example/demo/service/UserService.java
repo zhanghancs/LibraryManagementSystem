@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import cn.hutool.core.util.StrUtil;
+import com.example.demo.entity.Administrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +12,17 @@ public class UserService {
     TeacherService teacherService;
     @Autowired
     StudentService studentService;
+
+    @Autowired
+    AdministratorService administratorService;
+
     public Integer login(String id, String password) {
-        if (id.startsWith("1")) {
-            return 1;
-        } else if(id.startsWith("2")) {
+        if (administratorService.isValidId(id)) {
+            return administratorService.login(id, password);
+        } else if(teacherService.isValidId(id)) {
             return teacherService.login(id, password);
-        } else if(id.startsWith("3")) {
-            return studentService.login(id, password);
         } else {
-            return 0;
+            return studentService.login(id, password);
         }
     }
 }

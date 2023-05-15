@@ -18,7 +18,6 @@ public class CourseService {
     }
 
     public Course checkById(String id) {
-
         return courseMapper.checkByCourseId(id);
     }
 
