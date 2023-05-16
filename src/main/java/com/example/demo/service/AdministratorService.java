@@ -2,10 +2,13 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Administrator;
 import com.example.demo.mapper.AdministratorMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AdministratorService {
+
+    @Autowired
     AdministratorMapper administratorMapper;
     public boolean insert(Administrator administrator) {
         if (!isValidId(administrator.getId())) return false;

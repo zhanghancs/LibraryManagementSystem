@@ -11,6 +11,6 @@ public interface AdministratorMapper {
             "VALUES(#{studentId}, #{name},#{password},#{idNumber})")
     boolean insert(Administrator administrator);
 
-    @Select("select * from student where id=#{id} and password=#{password}")
+    @Select("select * from administrator where id=#{id} and password=#{password}")
     Administrator checkDTO(String id, String password);
 }
