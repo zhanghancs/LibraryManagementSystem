@@ -27,6 +27,10 @@ public class CourseController {
         return courseService.checkById(courseId);
     }
 
+    @GetMapping("/checkCourseCount/{courseId}")
+    public int checkCourseCount(@PathVariable String courseId) {
+        return courseService.checkCourseCount(courseId);
+    }
 //    @PostMapping("/save")
 //    public int save(@RequestBody Course course) {
 //        return courseService.save(course);

@@ -36,6 +36,10 @@ public class CourseService {
         return list;
     }
 
+    public int checkCourseCount(String courseId) {
+        return checkById(courseId).getSelectedCount();
+    }
+
 //    public int save(Course course) {
 //        course.setTeacherName(teacher);
 //        if (courseMapper.checkByCourseId(course.getCourseId()) == null) {

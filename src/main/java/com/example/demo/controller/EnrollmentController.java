@@ -22,17 +22,17 @@ public class EnrollmentController {
         return enrollmentService.insert(enrollment);
     }
 
-    @GetMapping("checkCourse/{studentId}")
+    @GetMapping("/checkCourse/{studentId}")
     public List<Course> checkCourse(@PathVariable String studentId) {
         return enrollmentService.checkCourse(studentId);
     }
 
-    @GetMapping("checkCanChooseCourse/{studentId}/")
+    @GetMapping("/checkCanChooseCourse/{studentId}/")
     public List<Course> checkCanChooseCourse(@PathVariable String studentId, String type) {
         return enrollmentService.checkCanChooseCourse(studentId, type);
     }
 
-    @GetMapping("checkStudent/{courseId}")
+    @GetMapping("/checkStudent/{courseId}")
     public List<Student> checkStudent(@PathVariable String courseId) {
        return enrollmentService.checkStudent(courseId);
     }
