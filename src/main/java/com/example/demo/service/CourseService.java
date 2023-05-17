@@ -21,19 +21,6 @@ public class CourseService {
         return courseMapper.checkByCourseId(id);
     }
 
-    public boolean save(Course course) {
-        if (courseMapper.checkByCourseId(course.getCourseId()) == null) {
-            return courseMapper.insert(course);
-        } else {
-            return courseMapper.update(course);
-        }
-    }
-
-    public boolean removeById(String id) {
-        if (courseMapper.checkByCourseId(id) == null) return false;
-        return courseMapper.removeById(id);
-    }
-
     public List<Course> checkByPage(Integer page, Integer size) {
         List<Course> courseList = courseMapper.checkAll();
         ArrayList<Course> list = new ArrayList<Course>();
@@ -48,4 +35,20 @@ public class CourseService {
 
         return list;
     }
+
+//    public int save(Course course) {
+//        course.setTeacherName(teacher);
+//        if (courseMapper.checkByCourseId(course.getCourseId()) == null) {
+//            return courseMapper.insert(course);
+//        } else {
+//            return courseMapper.update(course);
+//        }
+//    }
+
+//    public int removeById(String id) {
+//        if (courseMapper.checkByCourseId(id) == null) return 0;
+//        return courseMapper.removeById(id);
+//    }
+
+
 }

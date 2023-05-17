@@ -12,7 +12,6 @@ public class UserService {
     TeacherService teacherService;
     @Autowired
     StudentService studentService;
-
     @Autowired
     AdministratorService administratorService;
 

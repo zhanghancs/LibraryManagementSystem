@@ -23,20 +23,7 @@ public class TeacherService {
         return teacherMapper.checkById(teacherId);
     }
 
-    public boolean save(Teacher teacher) {
-        if (teacherMapper.checkById(teacher.getTeacherId()) == null) {
-            return teacherMapper.insert(teacher);
-        } else {
-            return teacherMapper.update(teacher);
-        }
-    }
-
-    public boolean removeById(String teacherId) {
-        if (teacherMapper.checkById(teacherId) == null) return false;
-        return teacherMapper.removeById(teacherId);
-    }
-
-    public Integer login(String teacherId, String password) {
+    public int login(String teacherId, String password) {
         if (null == teacherMapper.checkDTO(teacherId, password)) {
             return 0;
         }
@@ -63,4 +50,19 @@ public class TeacherService {
         }
         return false;
     }
+
+//    public int save(Teacher teacher) {
+//        if (teacherMapper.checkById(teacher.getTeacherId()) == null) {
+//            return teacherMapper.insert(teacher);
+//        } else {
+//            return teacherMapper.update(teacher);
+//        }
+//    }
+
+//    public int removeById(String teacherId) {
+//        if (teacherMapper.checkById(teacherId) == null) return 0;
+//        return teacherMapper.removeById(teacherId);
+//    }
+
+
 }

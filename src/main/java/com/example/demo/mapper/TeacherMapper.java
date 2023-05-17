@@ -18,12 +18,12 @@ public interface TeacherMapper {
     @Select("select * from teacher where teacherid = #{teacherId}")
     Teacher checkById(String teacherId);
 
-    boolean update(Teacher teacher);
+    int update(Teacher teacher);
 
     @Insert("insert into teacher(teacherId,name,password,idNumber) " +
             "VALUES(#{teacherId}, #{name},#{password},#{idNumber})")
-    boolean insert(Teacher teacher);
+    int insert(Teacher teacher);
 
     @Delete("delete from teacher where teacherId = #{teacherId} ")
-    boolean removeById(String teacherId);
+    int removeById(String teacherId);
 }

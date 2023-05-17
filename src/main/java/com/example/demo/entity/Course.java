@@ -7,11 +7,11 @@ public class Course {
     private String courseId;
     private String name;
     private String teacherId;
+    private String teacherName;
     private String tim; // 需要修改test
     private String room;
-    private Integer capacity;
+    private int capacity;
     private double credits;
-
-
+    private int selectedCount;
 
 }

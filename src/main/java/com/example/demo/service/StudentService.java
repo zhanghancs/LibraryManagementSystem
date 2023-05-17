@@ -22,20 +22,7 @@ public class StudentService {
         return studentMapper.checkById(studentId);
     }
 
-    public boolean save(Student student) {
-        if (studentMapper.checkById(student.getStudentId()) == null) {
-            return studentMapper.insert(student);
-        } else {
-            return studentMapper.update(student);
-        }
-    }
-
-    public boolean removeById(String studentId) {
-        if (studentMapper.checkById(studentId) == null) return false;
-        return studentMapper.removeById(studentId);
-    }
-
-    public Integer login(String studentId, String password) {
+    public int login(String studentId, String password) {
         if (null == studentMapper.checkDTO(studentId, password)) {
             return 0;
         } else {

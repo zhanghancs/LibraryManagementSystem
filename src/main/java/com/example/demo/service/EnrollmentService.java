@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.Enrollment;
 import com.example.demo.entity.Student;
@@ -21,10 +22,24 @@ public class EnrollmentService {
     @Autowired
     StudentMapper studentMapper;
 
-    public boolean insert(Enrollment enrollment) {
-        return enrollmentMapper.insert(enrollment);
+    public int insert(Enrollment enrollment) {
+        if (checkById(enrollment)) return 0;
+        if (enrollmentMapper.insert(enrollment) == 0) return 0;
+        return courseMapper.increaseSelectedCount(enrollment.getCourseId());
     }
-
+    public int deleteOne(Enrollment enrollment){
+        if (!checkById(enrollment)) return 0;
+        if (enrollmentMapper.deleteOne(enrollment) == 0) return 0;
+        return courseMapper.reduceSelectedCount(enrollment.getCourseId());
+    }
+    private boolean checkById(Enrollment enrollment) {
+        String courseId = enrollment.getCourseId();
+        String studentId = enrollment.getStudentId();
+        if (StrUtil.isBlank(courseId) || StrUtil.isBlank(studentId)) {
+            return false;
+        }
+        return enrollmentMapper.check(enrollment) != null;
+    }
     public List<Course> checkCourse(String studentId) {
         List<Enrollment> enrollmentList = enrollmentMapper.checkCourse(studentId);
         List<Course> courseList = new ArrayList<Course>();
@@ -43,21 +58,27 @@ public class EnrollmentService {
         return studentList;
     }
 
-    public boolean deleteOne(Enrollment enrollment){
-        return enrollmentMapper.deleteOne(enrollment);
-    }
-
     public List<Course> checkCanChooseCourse(String studentId, String type) {
         List<Course> courseList = courseMapper.checkAll();
         List<Course> courses = new ArrayList<>();
         // 入学年份
-        Integer year = Integer.parseInt(studentId.substring(3,5));
+        int year = Integer.parseInt(studentId.substring(0,2));
         // 年级
-        Integer grade = Integer.parseInt(type.substring(0,2)) - year + 1;
-        Integer semester = type.charAt(2) - '0';
-        for (Course item : courseList) {
+        int grade = Integer.parseInt(type.substring(0,2)) - year + 1;
+        int semester = type.charAt(2) - '0';
 
+        int major = Integer.parseInt(type.substring(3,5));
+        for (Course item : courseList) {
+            String courseId = item.getCourseId();
+            int courseGrade = courseId.charAt(7) - '0';
+            int courseMajor = Integer.parseInt(courseId.substring(5,7));
+            int courseSemester = courseId.charAt(8) - '0';
+            if (courseGrade == grade && courseSemester == semester && courseMajor == major) {
+                courses.add(item);
+            }
         }
         return courses;
     }
+
+
 }

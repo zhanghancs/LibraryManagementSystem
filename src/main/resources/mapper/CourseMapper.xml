@@ -12,6 +12,9 @@
             <if test="teacherId != null">
                 teacherId = #{teacherId},
             </if>
+            <if test="teacherName != null">
+                teacherName = #{teacherName},
+            </if>
             <if test="tim != null">
                 tim = #{tim},
             </if>

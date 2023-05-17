@@ -21,14 +21,14 @@ public interface StudentMapper {
     @Select("select * from student where studentId = #{studentId}")
     Student checkById(String studentId);
 
-    boolean update(Student student);
+    int update(Student student);
 
     @Insert("insert into student(studentId,name,password,idNumber,chosenCredits,earnedCredits) " +
             "VALUES(#{studentId}, #{name},#{password},#{idNumber},#{chosenCredits},#{earnedCredits})")
-    boolean insert(Student student);
+    int insert(Student student);
 
     @Delete("delete from student where studentId = #{studentId} ")
-    boolean removeById(String studentId);
+    int removeById(String studentId);
 
 
 }

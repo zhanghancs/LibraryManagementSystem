@@ -12,12 +12,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/enrollment")
 public class EnrollmentController {
+
+    static String type = "231";
     @Autowired
     EnrollmentService enrollmentService;
 
-
     @PostMapping("/insert")
-    public boolean insert(@RequestBody Enrollment enrollment) {
+    public Integer insert(@RequestBody Enrollment enrollment) {
         return enrollmentService.insert(enrollment);
     }
 
@@ -26,8 +27,8 @@ public class EnrollmentController {
         return enrollmentService.checkCourse(studentId);
     }
 
-    @GetMapping("checkCanChooseCourse/{studentId}/{type}")
-    public List<Course> checkCanChooseCourse(@PathVariable String studentId, @PathVariable String type) {
+    @GetMapping("checkCanChooseCourse/{studentId}/")
+    public List<Course> checkCanChooseCourse(@PathVariable String studentId, String type) {
         return enrollmentService.checkCanChooseCourse(studentId, type);
     }
 
@@ -37,7 +38,7 @@ public class EnrollmentController {
     }
 
     @DeleteMapping("/delete")
-    public boolean deleteOne(@RequestBody Enrollment enrollment){
+    public int deleteOne(@RequestBody Enrollment enrollment){
         return enrollmentService.deleteOne(enrollment);
     }
 }

@@ -27,13 +27,5 @@ public class StudentController {
         return studentService.checkById(studentId);
     }
 
-    @PostMapping("/save")
-    public boolean save(@RequestBody Student student) {
-        return studentService.save(student);
-    }
 
-    @DeleteMapping("/delete/{studentId}")
-    public boolean delete(@PathVariable String studentId) {
-        return studentService.removeById(studentId);
-    }
 }

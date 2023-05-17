@@ -12,7 +12,7 @@ import java.util.List;
 public interface EnrollmentMapper {
     @Insert("insert into enrollment(courseId, studentId) " +
             "VALUES(#{courseId},#{studentId})")
-    boolean insert(Enrollment enrollment);
+    int insert(Enrollment enrollment);
 
     @Select("select * from enrollment where studentId = #{studentId}")
     List<Enrollment> checkCourse(String studentId);
@@ -21,5 +21,8 @@ public interface EnrollmentMapper {
     List<Enrollment> checkStudent(String courseId);
 
     @Delete("delete from enrollment where courseId = #{courseId} and studentId = #{studentId}")
-    boolean deleteOne(Enrollment enrollment);
+    int deleteOne(Enrollment enrollment);
+
+    @Select("select * from enrollment where courseId = #{courseId} and studentId = #{studentId}")
+    Enrollment check(Enrollment enrollment);
 }

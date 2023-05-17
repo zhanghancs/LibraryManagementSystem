@@ -28,13 +28,13 @@ public class TeacherController {
         return teacherService.checkById(teacherId);
     }
 
-    @PostMapping("/save")
-    public boolean save(@RequestBody Teacher teacher) {
-        return teacherService.save(teacher);
-    }
-
-    @DeleteMapping("/delete/{teacherId}")
-    public boolean delete(@PathVariable String teacherId) {
-        return teacherService.removeById(teacherId);
-    }
+//    @PostMapping("/save")
+//    public int save(@RequestBody Teacher teacher) {
+//        return teacherService.save(teacher);
+//    }
+//
+//    @DeleteMapping("/delete/{teacherId}")
+//    public int delete(@PathVariable String teacherId) {
+//        return teacherService.removeById(teacherId);
+//    }
 }

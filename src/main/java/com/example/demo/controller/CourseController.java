@@ -22,18 +22,15 @@ public class CourseController {
     public List<Course> findByPage(@PathVariable("page") Integer page, @PathVariable("size") Integer size) {
         return courseService.checkByPage(page, size);
     }
-    @GetMapping("/check/{courseId}")
-    public Course checkByCourseId(@PathVariable String courseId) {
+    @GetMapping("/checkCourse/{courseId}")
+    public Course checkById(@PathVariable String courseId) {
         return courseService.checkById(courseId);
     }
 
-    @PostMapping("/save")
-    public boolean save(@RequestBody Course course) {
-        return courseService.save(course);
-    }
+//    @PostMapping("/save")
+//    public int save(@RequestBody Course course) {
+//        return courseService.save(course);
+//    }
 
-    @DeleteMapping("/delete/{courseId}")
-    public boolean delete(@PathVariable String courseId) {
-        return courseService.removeById(courseId);
-    }
+
 }
