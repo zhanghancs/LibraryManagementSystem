@@ -25,4 +25,10 @@ public interface EnrollmentMapper {
 
     @Select("select * from enrollment where courseId = #{courseId} and studentId = #{studentId}")
     Enrollment check(Enrollment enrollment);
+
+    @Delete("delete from enrollment where courseId = #{courseId}")
+    int deleteCourse(String courseId);
+
+    @Delete("delete from enrollment where studentId = #{studentId}")
+    int deleteStudent(String studentId);
 }

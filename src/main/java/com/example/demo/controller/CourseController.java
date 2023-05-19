@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Course;
+import com.example.demo.entity.Student;
 import com.example.demo.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,8 @@ public class CourseController {
     public int checkCourseCount(@PathVariable String courseId) {
         return courseService.checkCourseCount(courseId);
     }
+
+
 //    @PostMapping("/save")
 //    public int save(@RequestBody Course course) {
 //        return courseService.save(course);

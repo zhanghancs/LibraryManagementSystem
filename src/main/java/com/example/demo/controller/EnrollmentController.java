@@ -27,8 +27,8 @@ public class EnrollmentController {
         return enrollmentService.checkCourse(studentId);
     }
 
-    @GetMapping("/checkCanChooseCourse/{studentId}/")
-    public List<Course> checkCanChooseCourse(@PathVariable String studentId, String type) {
+    @GetMapping("/checkCanChooseCourse/{studentId}")
+    public List<Course> checkCanChooseCourse(@PathVariable String studentId) {
         return enrollmentService.checkCanChooseCourse(studentId, type);
     }
 
@@ -41,4 +41,6 @@ public class EnrollmentController {
     public int deleteOne(@RequestBody Enrollment enrollment){
         return enrollmentService.deleteOne(enrollment);
     }
+
+
 }

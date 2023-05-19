@@ -42,8 +42,9 @@ public class AdministratorController {
         return administratorService.saveTeacher(teacher);
     }
 
-    @DeleteMapping("/deleteTeacher/{teacherId}")
+    @PostMapping("/deleteTeacher/{teacherId}")
     public int deleteTeacher(@PathVariable String teacherId) {
         return administratorService.deleteTeacher(teacherId);
     }
+
 }

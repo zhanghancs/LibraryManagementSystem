@@ -2,10 +2,7 @@ package com.example.demo.mapper;
 
 
 import com.example.demo.entity.Student;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -23,12 +20,16 @@ public interface StudentMapper {
 
     int update(Student student);
 
-    @Insert("insert into student(studentId,name,password,idNumber,chosenCredits,earnedCredits) " +
-            "VALUES(#{studentId}, #{name},#{password},#{idNumber},#{chosenCredits},#{earnedCredits})")
+    @Insert("insert into student(studentId,name,password,idNumber,selectedCredits,earnedCredits) " +
+            "VALUES(#{studentId}, #{name},#{password},#{idNumber},#{selectedCredits},#{earnedCredits})")
     int insert(Student student);
 
     @Delete("delete from student where studentId = #{studentId} ")
     int removeById(String studentId);
 
+    @Update("update student set selectedCredits=selectedCredits+#{num} where studentId = #{studentId}")
+    int increaseCredits(String studentId, double num);
 
+    @Update("update student set selectedCredits=selectedCredits-#{num} where studentId = #{studentId}")
+    int reduceCredits(String studentId, double num);
 }

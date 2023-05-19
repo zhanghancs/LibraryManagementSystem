@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Course;
 import com.example.demo.entity.Teacher;
 import com.example.demo.entity.dto.UserDTO;
 import com.example.demo.service.TeacherService;
@@ -28,6 +29,10 @@ public class TeacherController {
         return teacherService.checkById(teacherId);
     }
 
+    @GetMapping("/checkCourse/{teacherId}")
+    public List<Course> checkCourse(@PathVariable String teacherId) {
+        return teacherService.checkCourse(teacherId);
+    }
 //    @PostMapping("/save")
 //    public int save(@RequestBody Teacher teacher) {
 //        return teacherService.save(teacher);

@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Course;
 import com.example.demo.entity.Teacher;
+import com.example.demo.mapper.CourseMapper;
 import com.example.demo.mapper.TeacherMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ public class TeacherService {
 
     @Autowired
     TeacherMapper teacherMapper;
+
+    @Autowired
+    CourseMapper courseMapper;
 
     public List<Teacher> checkAll() {
         return  teacherMapper.checkAll();
@@ -49,6 +54,10 @@ public class TeacherService {
             return true;
         }
         return false;
+    }
+
+    public List<Course> checkCourse(String teacherId) {
+        return courseMapper.checkByTeacherId(teacherId);
     }
 
 //    public int save(Teacher teacher) {

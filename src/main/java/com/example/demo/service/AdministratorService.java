@@ -4,10 +4,7 @@ import com.example.demo.entity.Administrator;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.Teacher;
-import com.example.demo.mapper.AdministratorMapper;
-import com.example.demo.mapper.CourseMapper;
-import com.example.demo.mapper.StudentMapper;
-import com.example.demo.mapper.TeacherMapper;
+import com.example.demo.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +19,7 @@ public class AdministratorService {
     TeacherMapper teacherMapper;
     @Autowired
     StudentMapper studentMapper;
+
 
     public int insert(Administrator administrator) {
         if (!isValidId(administrator.getId())) return 0;
@@ -43,14 +41,14 @@ public class AdministratorService {
     }
     public int saveCourse(Course course) {
         course.setTeacherName(teacherMapper.checkById(course.getTeacherId()).getName());
-        if (courseMapper.checkByCourseId(course.getCourseId()) == null) {
+        if (courseMapper.checkById(course.getCourseId()) == null) {
             return courseMapper.insert(course);
         } else {
             return courseMapper.update(course);
         }
     }
     public int deleteCourse(String id) {
-        if (courseMapper.checkByCourseId(id) == null) return 0;
+        if (courseMapper.checkById(id) == null) return 0;
         return courseMapper.deleteById(id);
     }
 

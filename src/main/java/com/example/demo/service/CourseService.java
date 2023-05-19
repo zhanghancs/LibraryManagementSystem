@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Course;
+import com.example.demo.entity.Student;
 import com.example.demo.mapper.CourseMapper;
+import com.example.demo.mapper.EnrollmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +15,13 @@ public class CourseService {
     @Autowired
     CourseMapper courseMapper;
 
+
     public List<Course> checkAll() {
         return  courseMapper.checkAll();
     }
 
     public Course checkById(String id) {
-        return courseMapper.checkByCourseId(id);
+        return courseMapper.checkById(id);
     }
 
     public List<Course> checkByPage(Integer page, Integer size) {
@@ -39,6 +42,8 @@ public class CourseService {
     public int checkCourseCount(String courseId) {
         return checkById(courseId).getSelectedCount();
     }
+
+
 
 //    public int save(Course course) {
 //        course.setTeacherName(teacher);

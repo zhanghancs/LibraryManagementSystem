@@ -12,7 +12,7 @@ public interface CourseMapper {
     List<Course> checkAll();
 
     @Select("select * from course where courseId = #{courseId}")
-    Course checkByCourseId(String courseId);
+    Course checkById(String courseId);
 
     int update(Course course);
 
@@ -29,4 +29,6 @@ public interface CourseMapper {
     @Update("update course set selectedCount=selectedCount+1 where courseId = #{courseId}")
     int increaseSelectedCount(String courseId);
 
+    @Select("select * from course where teacherId = #{teacherId}")
+    List<Course> checkByTeacherId(String teacherId);
 }

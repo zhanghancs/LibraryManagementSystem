@@ -24,13 +24,31 @@ public class EnrollmentService {
 
     public int insert(Enrollment enrollment) {
         if (checkById(enrollment)) return 0;
-        if (enrollmentMapper.insert(enrollment) == 0) return 0;
-        return courseMapper.increaseSelectedCount(enrollment.getCourseId());
+        String courseId = enrollment.getCourseId();
+        String studentId = enrollment.getStudentId();
+        Course course = courseMapper.checkById(courseId);
+        // 判断课容量是否满了
+        if (course.getSelectedCount() >= course.getCapacity()) return 0;
+        // 增加课程已选人数
+        if (courseMapper.increaseSelectedCount(courseId) == 0) return 0;
+        // 增加学生的学分
+        if(studentMapper.increaseCredits(studentId, course.getCredits()) == 0) return 0;
+        // 增加选课记录
+        return enrollmentMapper.insert(enrollment);
     }
     public int deleteOne(Enrollment enrollment){
+        // 查找该选课记录
         if (!checkById(enrollment)) return 0;
-        if (enrollmentMapper.deleteOne(enrollment) == 0) return 0;
-        return courseMapper.reduceSelectedCount(enrollment.getCourseId());
+        String courseId = enrollment.getCourseId();
+        String studentId = enrollment.getStudentId();
+        // 减少课程选课人数
+        if (courseMapper.reduceSelectedCount(enrollment.getCourseId()) == 0) return 0;
+        // 减少学生的学分
+        Course course = courseMapper.checkById(courseId);
+        if (studentMapper.reduceCredits(studentId, course.getCredits()) == 0) return 0;
+        // 删除选课记录
+        return enrollmentMapper.deleteOne(enrollment);
+
     }
     private boolean checkById(Enrollment enrollment) {
         String courseId = enrollment.getCourseId();
@@ -44,7 +62,7 @@ public class EnrollmentService {
         List<Enrollment> enrollmentList = enrollmentMapper.checkCourse(studentId);
         List<Course> courseList = new ArrayList<Course>();
         for (Enrollment item : enrollmentList) {
-            courseList.add(courseMapper.checkByCourseId(item.getCourseId()));
+            courseList.add(courseMapper.checkById(item.getCourseId()));
         }
         return courseList;
     }
@@ -67,11 +85,11 @@ public class EnrollmentService {
         int grade = Integer.parseInt(type.substring(0,2)) - year + 1;
         int semester = type.charAt(2) - '0';
 
-        int major = Integer.parseInt(type.substring(3,5));
+        int major = Integer.parseInt(studentId.substring(3,5));
         for (Course item : courseList) {
             String courseId = item.getCourseId();
-            int courseGrade = courseId.charAt(7) - '0';
             int courseMajor = Integer.parseInt(courseId.substring(5,7));
+            int courseGrade = courseId.charAt(7) - '0';
             int courseSemester = courseId.charAt(8) - '0';
             if (courseGrade == grade && courseSemester == semester && courseMajor == major) {
                 courses.add(item);
@@ -80,5 +98,28 @@ public class EnrollmentService {
         return courses;
     }
 
+    public int deleteCourse(String courseId) {
+        List<Enrollment> enrollmentList = enrollmentMapper.checkStudent(courseId);
+        int ans = 0;
+        for (Enrollment item: enrollmentList) {
+            ans += 1;
+            Course course = courseMapper.checkById(courseId);
+            // 减少学生的学分
+            if (studentMapper.reduceCredits(item.getStudentId(), course.getCredits()) == 0) return 0;
+            if (enrollmentMapper.deleteOne(item) == 0) return 0;
+        }
+        return ans;
+    }
 
+    public int deleteStudent(String studentId) {
+        List<Enrollment> enrollmentList = enrollmentMapper.checkStudent(studentId);
+        int ans = 0;
+        for (Enrollment item: enrollmentList) {
+            ans += 1;
+            // 减少课程选课人数
+            if (courseMapper.reduceSelectedCount(item.getCourseId()) == 0) return 0;
+            if (enrollmentMapper.deleteOne(item) == 0) return 0;
+        }
+        return ans;
+    }
 }
