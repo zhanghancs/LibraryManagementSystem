@@ -13,5 +13,5 @@ public class Course {
     private int capacity;
     private double credits;
     private int selectedCount;
-
+    private int state;
 }

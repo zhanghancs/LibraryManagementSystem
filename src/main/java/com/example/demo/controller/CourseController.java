@@ -23,6 +23,7 @@ public class CourseController {
     public List<Course> findByPage(@PathVariable("page") Integer page, @PathVariable("size") Integer size) {
         return courseService.checkByPage(page, size);
     }
+
     @GetMapping("/checkCourse/{courseId}")
     public Course checkById(@PathVariable String courseId) {
         return courseService.checkById(courseId);
@@ -33,6 +34,10 @@ public class CourseController {
         return courseService.checkCourseCount(courseId);
     }
 
+    @GetMapping("/findCourses")
+    public List<Course> findCourses(@RequestBody Course course) {
+        return courseService.findCourses(course);
+    }
 
 //    @PostMapping("/save")
 //    public int save(@RequestBody Course course) {

@@ -31,4 +31,6 @@ public interface CourseMapper {
 
     @Select("select * from course where teacherId = #{teacherId}")
     List<Course> checkByTeacherId(String teacherId);
+
+    // List<Course> findCourses(Course course);
 }

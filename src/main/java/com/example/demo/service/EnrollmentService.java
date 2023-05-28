@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class EnrollmentService {
@@ -23,12 +24,18 @@ public class EnrollmentService {
     StudentMapper studentMapper;
 
     public int insert(Enrollment enrollment) {
-        if (checkById(enrollment)) return 0;
+        if (checkById(enrollment)) return 2;
         String courseId = enrollment.getCourseId();
         String studentId = enrollment.getStudentId();
+        List<Course> courses = checkCourse(studentId);
         Course course = courseMapper.checkById(courseId);
+        String tim = course.getTim();
+        for (Course item : courses) {
+            String itemTim = item.getTim();
+            if (conflict(tim, itemTim)) return 3;
+        }
         // 判断课容量是否满了
-        if (course.getSelectedCount() >= course.getCapacity()) return 0;
+        if (course.getSelectedCount() >= course.getCapacity()) return 4;
         // 增加课程已选人数
         if (courseMapper.increaseSelectedCount(courseId) == 0) return 0;
         // 增加学生的学分
@@ -36,6 +43,7 @@ public class EnrollmentService {
         // 增加选课记录
         return enrollmentMapper.insert(enrollment);
     }
+
     public int deleteOne(Enrollment enrollment){
         // 查找该选课记录
         if (!checkById(enrollment)) return 0;
@@ -58,6 +66,7 @@ public class EnrollmentService {
         }
         return enrollmentMapper.check(enrollment) != null;
     }
+
     public List<Course> checkCourse(String studentId) {
         List<Enrollment> enrollmentList = enrollmentMapper.checkCourse(studentId);
         List<Course> courseList = new ArrayList<Course>();
@@ -79,12 +88,13 @@ public class EnrollmentService {
     public List<Course> checkCanChooseCourse(String studentId, String type) {
         List<Course> courseList = courseMapper.checkAll();
         List<Course> courses = new ArrayList<>();
+
         // 入学年份
         int year = Integer.parseInt(studentId.substring(0,2));
         // 年级
         int grade = Integer.parseInt(type.substring(0,2)) - year + 1;
+        // 学年
         int semester = type.charAt(2) - '0';
-
         int major = Integer.parseInt(studentId.substring(3,5));
         for (Course item : courseList) {
             String courseId = item.getCourseId();
@@ -92,7 +102,21 @@ public class EnrollmentService {
             int courseGrade = courseId.charAt(7) - '0';
             int courseSemester = courseId.charAt(8) - '0';
             if (courseGrade == grade && courseSemester == semester && courseMajor == major) {
+                item.setState(1);
                 courses.add(item);
+            }
+        }
+
+        List<Course> chooseCourses = checkCourse(studentId);
+
+        for (Course chooseCourse : chooseCourses) {
+            for (Course item : courses) {
+                if (Objects.equals(item.getCourseId(), chooseCourse.getCourseId())) {
+                    item.setState(2);
+                }
+                else if ( conflict(chooseCourse.getTim(), item.getTim())) {
+                    item.setState(3);
+                }
             }
         }
         return courses;
@@ -121,5 +145,17 @@ public class EnrollmentService {
             if (enrollmentMapper.deleteOne(item) == 0) return 0;
         }
         return ans;
+    }
+
+    private boolean conflict(String tim1, String tim2) {
+        if (tim1.charAt(1) == tim2.charAt(1)) {
+            if (tim1.charAt(3) <= tim2.charAt(5) && tim1.charAt(3) >= tim2.charAt(3)) {
+                return true;
+            }
+            if (tim1.charAt(5) <= tim2.charAt(5) && tim1.charAt(5) >= tim2.charAt(3)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
