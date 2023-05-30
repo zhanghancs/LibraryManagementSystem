@@ -22,6 +22,13 @@ public class StudentService {
         return studentMapper.checkById(studentId);
     }
 
+    public double checkCredits(String studentId) {
+        if (!isValidId(studentId)) return -1;
+        Student student = studentMapper.checkById(studentId);
+        if (null == student) return -1;
+        return student.getSelectedCredits();
+    }
+
     public int login(String studentId, String password) {
         if (null == studentMapper.checkDTO(studentId, password)) {
             return 0;

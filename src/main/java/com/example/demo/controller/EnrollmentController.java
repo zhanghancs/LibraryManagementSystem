@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/enrollment")
 public class EnrollmentController {
 
-    static String type = "231";
+
     @Autowired
     EnrollmentService enrollmentService;
 
@@ -29,7 +29,7 @@ public class EnrollmentController {
 
     @GetMapping("/checkCanChooseCourse/{studentId}")
     public List<Course> checkCanChooseCourse(@PathVariable String studentId) {
-        return enrollmentService.checkCanChooseCourse(studentId, type);
+        return enrollmentService.checkCanChooseCourse(studentId);
     }
 
     @GetMapping("/checkStudent/{courseId}")
@@ -42,5 +42,13 @@ public class EnrollmentController {
         return enrollmentService.deleteOne(enrollment);
     }
 
+    @GetMapping("/checkTime")
+    public String checkTime() {
+        return enrollmentService.checkTime();
+    }
 
+    @PostMapping("/setTime/{tim}")
+    public int setTime(@PathVariable String tim) {
+        return enrollmentService.setTime(tim);
+    }
 }

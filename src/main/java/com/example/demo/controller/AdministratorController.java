@@ -6,6 +6,8 @@ import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin")
 public class AdministratorController {
@@ -47,4 +49,19 @@ public class AdministratorController {
         return administratorService.deleteTeacher(teacherId);
     }
 
+    //新增内容
+    @GetMapping("/checkMessage")
+    public List<Message> checkMessage() {
+        return this.administratorService.checkMessage();
+    }
+
+    @PostMapping("/acceptProposal")
+    public int acceptProposal(@RequestBody Message oldMessage, @RequestBody Message newMessage) {
+        return this.administratorService.accept(oldMessage, newMessage);
+    }
+
+    @PostMapping("/denyProposal")
+    public int denyProposal(@RequestBody Message oldMessage, @RequestBody Message newMessage) {
+        return this.administratorService.deny(oldMessage, newMessage);
+    }
 }

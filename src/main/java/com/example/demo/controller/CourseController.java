@@ -34,7 +34,7 @@ public class CourseController {
         return courseService.checkCourseCount(courseId);
     }
 
-    @GetMapping("/findCourses")
+    @PostMapping ("/findCourses")
     public List<Course> findCourses(@RequestBody Course course) {
         return courseService.findCourses(course);
     }

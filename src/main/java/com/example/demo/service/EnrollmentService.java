@@ -10,6 +10,7 @@ import com.example.demo.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,17 +24,21 @@ public class EnrollmentService {
     @Autowired
     StudentMapper studentMapper;
 
+    private String type = "231";
     public int insert(Enrollment enrollment) {
         if (checkById(enrollment)) return 2;
         String courseId = enrollment.getCourseId();
         String studentId = enrollment.getStudentId();
-        List<Course> courses = checkCourse(studentId);
+
         Course course = courseMapper.checkById(courseId);
         String tim = course.getTim();
+
+        List<Course> courses = checkCourse(studentId);
         for (Course item : courses) {
             String itemTim = item.getTim();
             if (conflict(tim, itemTim)) return 3;
         }
+
         // 判断课容量是否满了
         if (course.getSelectedCount() >= course.getCapacity()) return 4;
         // 增加课程已选人数
@@ -47,8 +52,10 @@ public class EnrollmentService {
     public int deleteOne(Enrollment enrollment){
         // 查找该选课记录
         if (!checkById(enrollment)) return 0;
+
         String courseId = enrollment.getCourseId();
         String studentId = enrollment.getStudentId();
+
         // 减少课程选课人数
         if (courseMapper.reduceSelectedCount(enrollment.getCourseId()) == 0) return 0;
         // 减少学生的学分
@@ -85,8 +92,18 @@ public class EnrollmentService {
         return studentList;
     }
 
-    public List<Course> checkCanChooseCourse(String studentId, String type) {
+    public List<Course> checkCanChooseCourse(String studentId) {
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear() % 100;
+        int currentMonth = currentDate.getMonthValue();
+        if (currentMonth <= 6) {
+            type = String.format("%02d", currentYear) + "0";
+        } else {
+            type = String.format("%02d", currentYear) + "1";
+        }
+
         List<Course> courseList = courseMapper.checkAll();
+        // 可选课程 满足专业，年级，学年
         List<Course> courses = new ArrayList<>();
 
         // 入学年份
@@ -96,6 +113,7 @@ public class EnrollmentService {
         // 学年
         int semester = type.charAt(2) - '0';
         int major = Integer.parseInt(studentId.substring(3,5));
+
         for (Course item : courseList) {
             String courseId = item.getCourseId();
             int courseMajor = Integer.parseInt(courseId.substring(5,7));
@@ -107,6 +125,7 @@ public class EnrollmentService {
             }
         }
 
+        // 已选课程
         List<Course> chooseCourses = checkCourse(studentId);
 
         for (Course chooseCourse : chooseCourses) {
@@ -157,5 +176,22 @@ public class EnrollmentService {
             }
         }
         return false;
+    }
+
+    public String checkTime() {
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear() % 100;
+        int currentMonth = currentDate.getMonthValue();
+        if (currentMonth <= 6) {
+            type = String.format("%02d", currentYear) + "0";
+        } else {
+            type = String.format("%02d", currentYear) + "1";
+        }
+        return type;
+    }
+
+    public int setTime(String tim) {
+        type = tim;
+        return 1;
     }
 }

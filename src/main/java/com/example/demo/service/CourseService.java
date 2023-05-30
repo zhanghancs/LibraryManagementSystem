@@ -28,15 +28,33 @@ public class CourseService {
         List<Course> courses = checkAll();
         ArrayList<Course> courseList = new ArrayList<Course>();
         String courseId = course.getCourseId();
-        // 专业
-        String major = courseId.substring(5,7);
-        // 年级
-        char grade = courseId.charAt(7);
-        // 学年
-        char semester =  courseId.charAt(8);
+        String number = "*****";
+        String major = "**";
+        char grade = '*';
+        char semester = '*';
+
+        if (courseId != null) {
+            // 编号
+            number = courseId.substring(0, 5);
+            // 专业
+            major = courseId.substring(5, 7);
+            // 年级
+            grade = courseId.charAt(7);
+            // 学年
+            semester = courseId.charAt(8);
+        }
+        String tim = course.getTim();
+        char week = '*';
+        char start = '*';
+        char end = '*';
+        if (tim != null) {
+            week = tim.charAt(1);
+            start = tim.charAt(3);
+            end = tim.charAt(5);
+        }
+        String name = course.getName();
         String teacherId = course.getTeacherId();
         String teacherName = course.getTeacherName();
-        String tim = course.getTim();
         String room = course.getRoom();
         int capacity = course.getCapacity();
         double credits = course.getCredits();
@@ -45,25 +63,46 @@ public class CourseService {
         for (Course item : courses) {
             boolean flag = true;
             String itemId = item.getCourseId();
-            String itemMajor = itemId.substring(5,7);
-            char itemGrade = courseId.charAt(7);
-            char itemSemester =  courseId.charAt(8);
+            String itemNumber = itemId.substring(0, 5);
+            String itemMajor = itemId.substring(5, 7);
+            char itemGrade = itemId.charAt(7);
+            char itemSemester = itemId.charAt(8);
+            String itemTim = item.getTim();
+            char itemWeek = itemTim.charAt(1);
+            char itemStart = itemTim.charAt(3);
+            char itemEnd = itemTim.charAt(5);
+            if (!number.equals("*****") && !number.equals(itemNumber)) {
+                flag = false;
+            }
             if (!major.equals("**") && !major.equals(itemMajor)) {
                 flag = false;
             }
             if (grade != '*' && grade != itemGrade) {
                 flag = false;
             }
-            if (semester != '*' && semester!= itemSemester) {
+            if (semester != '*' && semester != itemSemester) {
+                flag = false;
+            }
+            if (name != null && !name.equals(item.getName())) {
                 flag = false;
             }
             if (teacherId != null && !teacherId.equals(item.getTeacherId())) {
                 flag = false;
             }
+
             if (teacherName != null && !teacherName.equals(item.getTeacherName())) {
                 flag = false;
             }
-            if (tim != null && !tim.equals(item.getTim())) {
+//            if (tim != null && !tim.equals(item.getTim())) {
+//                flag = false;
+//            }
+            if (week != '*' && week != itemWeek) {
+                flag = false;
+            }
+            if (start != '*' && start != itemStart) {
+                flag = false;
+            }
+            if (end != '*' && end != itemEnd) {
                 flag = false;
             }
             if (room != null && !room.equals(item.getRoom())) {

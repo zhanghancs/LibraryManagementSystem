@@ -33,4 +33,12 @@ public interface CourseMapper {
     List<Course> checkByTeacherId(String teacherId);
 
     // List<Course> findCourses(Course course);
+    @Select({"SELECT SUBSTR(courseId, 1, 3) FROM course WHERE name = #{name} LIMIT 1"})
+    String getCourseTypeByName(String name);
+
+    @Select({"SELECT MAX(SUBSTR(courseId, 1, 3)) FROM course"})
+    String getMaxCourseType();
+
+    @Select({"SELECT MAX(courseId) FROM course WHERE name = #{courseName}"})
+    String getMaxCourseNumber(String courseName);
 }

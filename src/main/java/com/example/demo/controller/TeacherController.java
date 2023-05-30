@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Course;
+import com.example.demo.entity.Message;
 import com.example.demo.entity.Teacher;
 import com.example.demo.entity.dto.UserDTO;
 import com.example.demo.service.TeacherService;
@@ -42,4 +43,32 @@ public class TeacherController {
 //    public int delete(@PathVariable String teacherId) {
 //        return teacherService.removeById(teacherId);
 //    }
+    @PostMapping("/submitCourse")
+    public int submitCourse(@RequestParam("teacherId") String teacherId,
+                            @RequestParam("name") String name,
+                            @RequestParam("capacity") int capacity,
+                            @RequestParam("tim") String tim,
+                            @RequestParam("credits") int credits,
+                            @RequestParam("year") String year) {
+
+        Message message = new Message();
+        message.setSendAccount(teacherId);
+        message.setName(name);
+        message.setCapcity(capacity);
+        message.setCredits(credits);
+        message.setTim(tim);
+        message.setYear(year);
+
+        return teacherService.submitCourse(message);
+    }
+
+    @GetMapping({"/checkSentMessage/{teacherId}"})
+    public List<Message> checkSentMessage(@PathVariable String teacherId) {
+        return this.teacherService.checkSentMessage(teacherId);
+    }
+
+    @GetMapping({"/checkReceivedMessage/{teacherId}"})
+    public List<Message> checkReceivedMessage(@PathVariable String teacherId) {
+        return this.teacherService.checkReceivedMessage(teacherId);
+    }
 }
