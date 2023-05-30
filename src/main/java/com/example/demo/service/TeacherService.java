@@ -83,15 +83,15 @@ public class TeacherService {
         return rowsAffected > 0 ? 1 : 0;
     }
     //查看消息
-    public List<Message> checkSentMessage(String sendAccount)
-    {
-        return this.messageMapper.checkBySender(sendAccount);
+    public List<Message> checkSentMessage(String sendAccount) {
+        return messageMapper.checkBySender(sendAccount);
     }
 
-    public List<Message> checkReceivedMessage(String receiveAccount)
-    {
-        return this.messageMapper.checkByReceiver(receiveAccount);
+    public List<Message> checkReceivedMessage(String receiveAccount) {
+        return messageMapper.checkByReceiver(receiveAccount);
     }
+
+
 //    public int save(Teacher teacher) {
 //        if (teacherMapper.checkById(teacher.getTeacherId()) == null) {
 //            return teacherMapper.insert(teacher);

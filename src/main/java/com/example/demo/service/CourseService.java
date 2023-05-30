@@ -83,14 +83,14 @@ public class CourseService {
             if (semester != '*' && semester != itemSemester) {
                 flag = false;
             }
-            if (name != null && !name.equals(item.getName())) {
+            if (name != null && !item.getName().contains(name)) {
                 flag = false;
             }
             if (teacherId != null && !teacherId.equals(item.getTeacherId())) {
                 flag = false;
             }
 
-            if (teacherName != null && !teacherName.equals(item.getTeacherName())) {
+            if (teacherName != null && !item.getTeacherName().contains(teacherName)) {
                 flag = false;
             }
 //            if (tim != null && !tim.equals(item.getTim())) {
@@ -105,7 +105,7 @@ public class CourseService {
             if (end != '*' && end != itemEnd) {
                 flag = false;
             }
-            if (room != null && !room.equals(item.getRoom())) {
+            if (room != null && !item.getRoom().contains(room)) {
                 flag = false;
             }
             if (capacity != 0 && capacity != item.getCapacity()) {

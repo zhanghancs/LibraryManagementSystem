@@ -132,9 +132,10 @@ public class EnrollmentService {
             for (Course item : courses) {
                 if (Objects.equals(item.getCourseId(), chooseCourse.getCourseId())) {
                     item.setState(2);
-                }
-                else if ( conflict(chooseCourse.getTim(), item.getTim())) {
+                } else if ( conflict(chooseCourse.getTim(), item.getTim())) {
                     item.setState(3);
+                } else if (item.getCapacity() == item.getSelectedCount()) {
+                    item.setState(4);
                 }
             }
         }

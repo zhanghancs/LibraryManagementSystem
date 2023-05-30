@@ -178,8 +178,7 @@ public class AdministratorService {
 
         return result;
     }
-
-    public int deny(Message oldMessage, Message newMessage)
+    public int deny(Message oldMessage,Message newMessage)
     {
         int result = messageMapper.updateFlag(oldMessage, 2);
 
