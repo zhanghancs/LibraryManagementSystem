@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AdministratorService {
@@ -21,7 +23,6 @@ public class AdministratorService {
     TeacherMapper teacherMapper;
     @Autowired
     StudentMapper studentMapper;
-
     @Autowired
     MessageMapper messageMapper;
 
@@ -30,7 +31,6 @@ public class AdministratorService {
         if (!isValidId(administrator.getId())) return 0;
         return administratorMapper.insert(administrator);
     }
-
     public int login(String id, String password) {
         if (null == administratorMapper.checkDTO(id, password)){
             return 0;
@@ -56,7 +56,6 @@ public class AdministratorService {
         if (courseMapper.checkById(id) == null) return 0;
         return courseMapper.deleteById(id);
     }
-
     public int saveStudent(Student student) {
         if (studentMapper.checkById(student.getStudentId()) == null) {
             return studentMapper.insert(student);
@@ -64,12 +63,10 @@ public class AdministratorService {
             return studentMapper.update(student);
         }
     }
-
     public int deleteStudent(String studentId) {
         if (studentMapper.checkById(studentId) == null) return 0;
         return studentMapper.removeById(studentId);
     }
-
     public int saveTeacher(Teacher teacher) {
         if (teacherMapper.checkById(teacher.getTeacherId()) == null) {
             return teacherMapper.insert(teacher);
@@ -77,87 +74,37 @@ public class AdministratorService {
             return teacherMapper.update(teacher);
         }
     }
-
     public int deleteTeacher(String teacherId) {
         if (teacherMapper.checkById(teacherId) == null) return 0;
         return teacherMapper.removeById(teacherId);
     }
 
+    // 查询所有的未审核信息
     public List<Message> checkMessage() {
-        return messageMapper.checkFlagEquals0();
-    }
-
-
-    public String generateCourseId(String courseName,String major,String year, String term) {
-        String courseNumber = generateCourseNumber(courseName);
-        String courseCount = getCourseCount(courseName);
-        // String term = getTerm();
-        String courseId =courseNumber + courseCount + major + year + term;
-
-        return courseId;
-    }
-
-//    public String generateCourseNumber(String courseName) {
-//
-//        if (courseMapper.checkAll().isEmpty()) {
-//            return "000";
-//        }
-//
-//        String courseType = courseMapper.getCourseTypeByName(courseName);
-//        if (courseType != null) {
-//            return courseType;
-//        } else {
-//            String maxCourseType = courseMapper.getMaxCourseType();
-//            int nextCourseType = Integer.parseInt(maxCourseType) + 1;
-//            return String.format("%03d", nextCourseType);
-//        }
-//    }
-    public String generateCourseNumber(String courseName) {
-
-        String courseType = courseMapper.getCourseTypeByName(courseName);
-        if (courseType != null) {
-            return courseType;
+        List<Message> messages = messageMapper.checkFlagEquals0();
+        for (Message message : messages) {
+            message.setState(0);
+            if (checkTimeConflict(message.getSendAccount(), message.getTim())) {
+                message.setState(1);
+            }
         }
-        String maxCourseType = courseMapper.getMaxCourseType();
-        if (null == maxCourseType) return "000";
-        int nextCourseType = Integer.parseInt(maxCourseType) + 1;
-        return String.format("%03d", nextCourseType);
-
+        return messages;
     }
-    public String getCourseCount(String courseName) {
-        String maxCourseNumber = courseMapper.getMaxCourseNumber(courseName);
-        if (maxCourseNumber == null) {
-            return "00"; // 如果没有重名课程，则计数为 "00"
-        } else {
-            String count = maxCourseNumber.substring(3, 5);
-            int nextCount = Integer.parseInt(count) + 1;
-            return String.format("%02d", nextCount); // 计数加1，并格式化为两位数字
+
+    public List<Message> checkAllMessage() {
+        return messageMapper.checkAll();
+    }
+
+    public List<String> checkFreeRooms(String tim, String start) {
+        List<String> rooms = generateRooms(start);
+        List<Course> courses = courseMapper.checkAll();
+        for (Course course : courses) {
+            if(conflict(tim, course.getTim())) {
+                rooms.removeIf(room -> room.equals(course.getRoom()));
+            }
         }
+        return rooms;
     }
-
-//    private String getTimeRule() {
-//        LocalDate now = LocalDate.now();
-//        int month = now.getMonthValue();
-//
-//        if (month <= 6) {
-//            return "0";
-//        } else if (month >= 9 && month <= 12) {
-//            return "1";
-//        } else {
-//            // 默认情况，不在指定的时间段，返回空字符串或其他默认值
-//            return ""; // 或者返回其他默认值
-//        }
-//    }
-
-//    private String getTerm() {
-//        LocalDate now = LocalDate.now();
-//        int month = now.getMonthValue();
-//        if (month <= 6) {
-//            return "0";
-//        }
-//        return "1";
-//    }
-
     public int accept(Message message)  {
 //        int result = messageMapper.updateFlag(message.getId(), 1);
 //        if (result == 0) return 0;
@@ -167,9 +114,9 @@ public class AdministratorService {
         message.setReceiveTime(sdf.format(currentDate));
 
         String major = message.getSendAccount().substring(3, 5);
-        String year = message.getGrade();
+        String grade = message.getGrade();
         String term = message.getTerm();
-        String courseId = generateCourseId(message.getCourseName(), major, year, term);
+        String courseId = generateCourseId(message.getCourseName(), major, grade);
         message.setCourseId(courseId);
 
         if (messageMapper.update(message) == 0) return 0;
@@ -199,5 +146,119 @@ public class AdministratorService {
 
         return messageMapper.update(message);
     }
+
+    private List<String> generateRooms(String start) {
+        List<String> rooms = new ArrayList<>();
+        for (int i=1; i<=8; ++i) {
+            for (int j=1; j<=5; ++j) {
+                for (int k=0; k<=6; ++k) {
+                    rooms.add("j"+i+"-"+j+"0"+k);
+                }
+            }
+        }
+        if (start != null) {
+            rooms.removeIf(room -> !room.startsWith(start));
+        }
+        return rooms;
+    }
+
+    //    public String generateCourseNumber(String courseName) {
+//
+//        if (courseMapper.checkAll().isEmpty()) {
+//            return "000";
+//        }
+//
+//        String courseType = courseMapper.getCourseTypeByName(courseName);
+//        if (courseType != null) {
+//            return courseType;
+//        } else {
+//            String maxCourseType = courseMapper.getMaxCourseType();
+//            int nextCourseType = Integer.parseInt(maxCourseType) + 1;
+//            return String.format("%03d", nextCourseType);
+//        }
+//    }
+    private String generateCourseId(String courseName,String major,String grade) {
+        String courseNumber = generateCourseNumber(courseName);
+        String courseCount = getCourseCount(courseName);
+        String term = getTerm();
+        String courseId =courseNumber + courseCount + major + grade + term;
+
+        return courseId;
+    }
+    private String generateCourseNumber(String courseName) {
+
+        String courseType = courseMapper.getCourseTypeByName(courseName);
+        if (courseType != null) {
+            return courseType;
+        }
+        String maxCourseType = courseMapper.getMaxCourseType();
+        if (null == maxCourseType) return "000";
+        int nextCourseType = Integer.parseInt(maxCourseType) + 1;
+        return String.format("%03d", nextCourseType);
+
+    }
+    private String getCourseCount(String courseName) {
+        String maxCourseNumber = courseMapper.getMaxCourseNumber(courseName);
+        if (maxCourseNumber == null) {
+            return "00"; // 如果没有重名课程，则计数为 "00"
+        } else {
+            String count = maxCourseNumber.substring(3, 5);
+            int nextCount = Integer.parseInt(count) + 1;
+            return String.format("%02d", nextCount); // 计数加1，并格式化为两位数字
+        }
+    }
+    private String getTerm() {
+        LocalDate now = LocalDate.now();
+        int month = now.getMonthValue();
+        if (month <= 6) {
+            return "0";
+        }
+        return "1";
+    }
+
+//    private String getTimeRule() {
+//        LocalDate now = LocalDate.now();
+//        int month = now.getMonthValue();
+//
+//        if (month <= 6) {
+//            return "0";
+//        } else if (month >= 9 && month <= 12) {
+//            return "1";
+//        } else {
+//            // 默认情况，不在指定的时间段，返回空字符串或其他默认值
+//            return ""; // 或者返回其他默认值
+//        }
+//    }
+
+
+
+    // 查询 老师 tim 内是否有课
+    private boolean checkTimeConflict(String teacherId, String tim) {
+        List<Course> courses = courseMapper.checkByTeacherId(teacherId);
+        for (Course item : courses) {
+            if (conflict(item.getTim(), tim)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean conflict(String tim1, String tim2) {
+        if (tim1.charAt(1) == tim2.charAt(1)) {
+            if (tim1.charAt(3) <= tim2.charAt(5) && tim1.charAt(3) >= tim2.charAt(3)) {
+                return true;
+            }
+            if (tim1.charAt(5) <= tim2.charAt(5) && tim1.charAt(5) >= tim2.charAt(3)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    public List<Message> checkAllMessage() {
+//        return messageMapper.checkAll();
+//    }
+
+
+
 
 }

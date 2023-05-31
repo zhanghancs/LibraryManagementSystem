@@ -142,6 +142,8 @@ public class CourseService {
     }
 
 
+    // 查询一门课是否与该老师的其它课冲突
+
 
 //    public int save(Course course) {
 //        course.setTeacherName(teacher);
@@ -156,6 +158,7 @@ public class CourseService {
 //        if (courseMapper.checkByCourseId(id) == null) return 0;
 //        return courseMapper.removeById(id);
 //    }
+
 
 
 }

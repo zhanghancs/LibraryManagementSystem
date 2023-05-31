@@ -21,8 +21,9 @@ public class Message {
     private String tim;
     private String room;
     private String sendTime;
-
     private String receiveTime;
+
+    private int state;
 
 //    public Message() {
 //        this.courseId="";

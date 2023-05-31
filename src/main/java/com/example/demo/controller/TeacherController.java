@@ -66,17 +66,13 @@ public class TeacherController {
 
     @PostMapping("/submitCourse")
     public int submitCourse(@RequestBody Message message) {
-        message.setFlag(0);
-        LocalDateTime now = LocalDateTime.now();
-        // 定义日期时间格式
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        message.setSendTime(now.format(formatter));
         return teacherService.submitCourse(message);
     }
     @GetMapping({"/checkSentMessage/{teacherId}"})
     public List<Message> checkSentMessage(@PathVariable String teacherId) {
         return this.teacherService.checkSentMessage(teacherId);
     }
+
 
 //    @GetMapping({"/checkReceivedMessage/{teacherId}"})
 //    public List<Message> checkReceivedMessage(@PathVariable String teacherId) {

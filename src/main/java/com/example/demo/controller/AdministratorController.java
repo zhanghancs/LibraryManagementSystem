@@ -49,19 +49,33 @@ public class AdministratorController {
         return administratorService.deleteTeacher(teacherId);
     }
 
-    //新增内容
+    //查询所有未审核的 message
     @GetMapping("/checkMessage")
     public List<Message> checkMessage() {
         return administratorService.checkMessage();
     }
 
+    // 查询所有 message
+    @GetMapping("/checkAllMessage")
+    public List<Message> checkAllMessage() {
+        return administratorService.checkAllMessage();
+    }
+
+    // 同意 申请
     @PostMapping("/acceptProposal")
     public int acceptProposal(@RequestBody Message message) {
         return administratorService.accept(message);
     }
 
+    // 拒绝 申请
     @PostMapping("/denyProposal")
     public int denyProposal(@RequestBody Message message) {
         return administratorService.deny(message);
+    }
+
+    // 查询 所有 tim 时间内的空闲教室
+    @GetMapping("/checkFreeRooms/{tim}/{start}")
+    public List<String> checkFreeRooms(@PathVariable String tim, @PathVariable String start) {
+        return administratorService.checkFreeRooms(tim, start);
     }
 }

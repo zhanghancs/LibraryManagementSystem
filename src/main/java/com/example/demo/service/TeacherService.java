@@ -9,6 +9,9 @@ import com.example.demo.mapper.TeacherMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +81,21 @@ public class TeacherService {
 //
 //        return rowsAffected > 0 ? 1 : 0;
 //    }
+    private String getNewTerm() {
+        LocalDate now = LocalDate.now();
+        int month = now.getMonthValue();
+        if (month <= 6) {
+            return "0";
+        }
+        return "1";
+    }
     public int submitCourse(Message message) {
+        message.setFlag(0);
+        LocalDateTime now = LocalDateTime.now();
+        // 定义日期时间格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        message.setSendTime(now.format(formatter));
+        message.setTerm(getNewTerm());
         return messageMapper.insert(message);
     }
     //查看消息

@@ -48,4 +48,5 @@ public interface CourseMapper {
     @Select({"SELECT MAX(courseId) FROM course WHERE name = #{courseName}"})
     String getMaxCourseNumber(String courseName);
 
+
 }

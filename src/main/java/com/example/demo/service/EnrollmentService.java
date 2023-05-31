@@ -30,9 +30,9 @@ public class EnrollmentService {
         String courseId = enrollment.getCourseId();
         String studentId = enrollment.getStudentId();
 
+        // 查询一门课是否与该同学的其它课冲突
         Course course = courseMapper.checkById(courseId);
         String tim = course.getTim();
-
         List<Course> courses = checkCourse(studentId);
         for (Course item : courses) {
             String itemTim = item.getTim();
@@ -132,7 +132,7 @@ public class EnrollmentService {
             for (Course item : courses) {
                 if (Objects.equals(item.getCourseId(), chooseCourse.getCourseId())) {
                     item.setState(2);
-                } else if ( conflict(chooseCourse.getTim(), item.getTim())) {
+                } else if (conflict(chooseCourse.getTim(), item.getTim())) {
                     item.setState(3);
                 } else if (item.getCapacity() == item.getSelectedCount()) {
                     item.setState(4);
@@ -167,17 +167,7 @@ public class EnrollmentService {
         return ans;
     }
 
-    private boolean conflict(String tim1, String tim2) {
-        if (tim1.charAt(1) == tim2.charAt(1)) {
-            if (tim1.charAt(3) <= tim2.charAt(5) && tim1.charAt(3) >= tim2.charAt(3)) {
-                return true;
-            }
-            if (tim1.charAt(5) <= tim2.charAt(5) && tim1.charAt(5) >= tim2.charAt(3)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     public String checkTime() {
         LocalDate currentDate = LocalDate.now();
@@ -194,5 +184,17 @@ public class EnrollmentService {
     public int setTime(String tim) {
         type = tim;
         return 1;
+    }
+
+    private boolean conflict(String tim1, String tim2) {
+        if (tim1.charAt(1) == tim2.charAt(1)) {
+            if (tim1.charAt(3) <= tim2.charAt(5) && tim1.charAt(3) >= tim2.charAt(3)) {
+                return true;
+            }
+            if (tim1.charAt(5) <= tim2.charAt(5) && tim1.charAt(5) >= tim2.charAt(3)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
