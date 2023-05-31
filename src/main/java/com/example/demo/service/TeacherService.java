@@ -96,8 +96,10 @@ public class TeacherService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         message.setSendTime(now.format(formatter));
         message.setTerm(getNewTerm());
+        message.setTeacherName(teacherMapper.checkById(message.getSendAccount()).getName());
         return messageMapper.insert(message);
     }
+
     //查看消息
     public List<Message> checkSentMessage(String sendAccount) {
         return messageMapper.checkBySender(sendAccount);

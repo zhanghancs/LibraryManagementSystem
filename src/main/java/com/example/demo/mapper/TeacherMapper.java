@@ -26,4 +26,5 @@ public interface TeacherMapper {
 
     @Delete("delete from teacher where teacherId = #{teacherId} ")
     int removeById(String teacherId);
+
 }

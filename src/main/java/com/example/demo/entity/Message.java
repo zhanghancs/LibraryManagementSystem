@@ -12,6 +12,7 @@ public class Message {
     private String sendAccount;
     private String receiveAccount;
     private int flag;
+    private String teacherName;
     private String courseId;
     private String courseName;
     private String grade;

@@ -34,6 +34,10 @@ public class AdministratorController {
         return administratorService.saveStudent(student);
     }
 
+    @PostMapping("/saveStudents")
+    public int saveStudents(@RequestBody List<Student> students) {
+        return administratorService.saveStudents(students);
+    }
     @DeleteMapping("/deleteStudent/{studentId}")
     public int deleteStudent(@PathVariable String studentId) {
         return administratorService.deleteStudent(studentId);
@@ -42,6 +46,11 @@ public class AdministratorController {
     @PostMapping("/saveTeacher")
     public int saveTeacher(@RequestBody Teacher teacher) {
         return administratorService.saveTeacher(teacher);
+    }
+
+    @PostMapping("/saveTeachers")
+    public int saveTeachers(@RequestBody List<Teacher> teachers) {
+        return administratorService.saveTeachers(teachers);
     }
 
     @PostMapping("/deleteTeacher/{teacherId}")

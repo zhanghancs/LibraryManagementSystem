@@ -79,6 +79,24 @@ public class AdministratorService {
         return teacherMapper.removeById(teacherId);
     }
 
+    public int saveTeachers(List<Teacher> teachers) {
+        int ans = 0;
+        for (Teacher teacher : teachers) {
+            ans += 1;
+            if ( 0 == saveTeacher(teacher)) return 0;
+        }
+        return ans;
+    }
+
+    public int saveStudents(List<Student> students) {
+        int ans = 0;
+        for (Student student : students) {
+            ans += 1;
+            if ( 0 == saveStudent(student)) return 0;
+        }
+        return ans;
+    }
+
     // 查询所有的未审核信息
     public List<Message> checkMessage() {
         List<Message> messages = messageMapper.checkFlagEquals0();
@@ -92,7 +110,16 @@ public class AdministratorService {
     }
 
     public List<Message> checkAllMessage() {
-        return messageMapper.checkAll();
+        List<Message> messages = messageMapper.checkAll();
+        for (Message message : messages) {
+            if (message.getFlag() == 0) {
+                message.setState(0);
+                if (checkTimeConflict(message.getSendAccount(), message.getTim())) {
+                    message.setState(1);
+                }
+            }
+        }
+        return messages;
     }
 
     public List<String> checkFreeRooms(String tim, String start) {
@@ -115,7 +142,7 @@ public class AdministratorService {
 
         String major = message.getSendAccount().substring(3, 5);
         String grade = message.getGrade();
-        String term = message.getTerm();
+        // String term = message.getTerm();
         String courseId = generateCourseId(message.getCourseName(), major, grade);
         message.setCourseId(courseId);
 
@@ -253,6 +280,8 @@ public class AdministratorService {
         }
         return false;
     }
+
+
 
 //    public List<Message> checkAllMessage() {
 //        return messageMapper.checkAll();
