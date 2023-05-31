@@ -52,16 +52,16 @@ public class AdministratorController {
     //新增内容
     @GetMapping("/checkMessage")
     public List<Message> checkMessage() {
-        return this.administratorService.checkMessage();
+        return administratorService.checkMessage();
     }
 
     @PostMapping("/acceptProposal")
-    public int acceptProposal(@RequestBody Message oldMessage, @RequestBody Message newMessage) {
-        return this.administratorService.accept(oldMessage, newMessage);
+    public int acceptProposal(@RequestBody Message message) {
+        return administratorService.accept(message);
     }
 
     @PostMapping("/denyProposal")
-    public int denyProposal(@RequestBody Message oldMessage, @RequestBody Message newMessage) {
-        return this.administratorService.deny(oldMessage, newMessage);
+    public int denyProposal(@RequestBody Message message) {
+        return administratorService.deny(message);
     }
 }

@@ -8,26 +8,31 @@ import java.util.Date;
 
 @Data
 public class Message {
+    private int id;
     private String sendAccount;
     private String receiveAccount;
     private int flag;
     private String courseId;
-    private String name;
-    private int capcity;
-    private float credits;
+    private String courseName;
+    private String grade;
+    private String term;
+    private int capacity;
+    private double credits;
     private String tim;
     private String room;
-    private String textTim;
-    private String year;
-    public Message() {
-        this.courseId="";
-        this.flag = 0;
-        Date currentDate = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = sdf.format(currentDate);
-        this.textTim = dateString;
-        this.room="";
-    }
+    private String sendTime;
+
+    private String receiveTime;
+
+//    public Message() {
+//        this.courseId="";
+//        this.flag = 0;
+//        Date currentDate = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String dateString = sdf.format(currentDate);
+//        this.textTim = dateString;
+//        this.room="";
+//    }
     //发送者、消息类型（int变量）、课程编号、课程名称、课容量、课程学分、开始时间，结束时间，消息发送时间
 
 //    public String getSendAccount() {

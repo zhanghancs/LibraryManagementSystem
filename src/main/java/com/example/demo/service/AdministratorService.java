@@ -82,41 +82,48 @@ public class AdministratorService {
         if (teacherMapper.checkById(teacherId) == null) return 0;
         return teacherMapper.removeById(teacherId);
     }
-    public List<Message> checkMessage()
-    {
-        return this.messageMapper.checkFlagEquals0();
+
+    public List<Message> checkMessage() {
+        return messageMapper.checkFlagEquals0();
     }
 
 
-    public String generateCourseId(String courseName,String school,String year) {
-        String courseType = generateCourseNumber(courseName);
+    public String generateCourseId(String courseName,String major,String year, String term) {
+        String courseNumber = generateCourseNumber(courseName);
         String courseCount = getCourseCount(courseName);
-        String tempId = courseType + courseCount;
+        // String term = getTerm();
+        String courseId =courseNumber + courseCount + major + year + term;
 
-
-        tempId = tempId +school+year;
-
-        String timeRule = getTimeRule();
-        tempId += timeRule;
-        return tempId;
+        return courseId;
     }
 
+//    public String generateCourseNumber(String courseName) {
+//
+//        if (courseMapper.checkAll().isEmpty()) {
+//            return "000";
+//        }
+//
+//        String courseType = courseMapper.getCourseTypeByName(courseName);
+//        if (courseType != null) {
+//            return courseType;
+//        } else {
+//            String maxCourseType = courseMapper.getMaxCourseType();
+//            int nextCourseType = Integer.parseInt(maxCourseType) + 1;
+//            return String.format("%03d", nextCourseType);
+//        }
+//    }
     public String generateCourseNumber(String courseName) {
-
-        if (courseMapper.checkAll().isEmpty()) {
-            return "000";
-        }
 
         String courseType = courseMapper.getCourseTypeByName(courseName);
         if (courseType != null) {
             return courseType;
-        } else {
-            String maxCourseType = courseMapper.getMaxCourseType();
-            int nextCourseType = Integer.parseInt(maxCourseType) + 1;
-            return String.format("%03d", nextCourseType);
         }
-    }
+        String maxCourseType = courseMapper.getMaxCourseType();
+        if (null == maxCourseType) return "000";
+        int nextCourseType = Integer.parseInt(maxCourseType) + 1;
+        return String.format("%03d", nextCourseType);
 
+    }
     public String getCourseCount(String courseName) {
         String maxCourseNumber = courseMapper.getMaxCourseNumber(courseName);
         if (maxCourseNumber == null) {
@@ -128,67 +135,69 @@ public class AdministratorService {
         }
     }
 
-    private String getTimeRule() {
-        LocalDate now = LocalDate.now();
-        int month = now.getMonthValue();
+//    private String getTimeRule() {
+//        LocalDate now = LocalDate.now();
+//        int month = now.getMonthValue();
+//
+//        if (month <= 6) {
+//            return "0";
+//        } else if (month >= 9 && month <= 12) {
+//            return "1";
+//        } else {
+//            // 默认情况，不在指定的时间段，返回空字符串或其他默认值
+//            return ""; // 或者返回其他默认值
+//        }
+//    }
 
-        if (month >= 3 && month <= 6) {
-            return "0";
-        } else if (month >= 9 && month <= 12) {
-            return "1";
-        } else {
-            // 默认情况，不在指定的时间段，返回空字符串或其他默认值
-            return ""; // 或者返回其他默认值
-        }
-    }
+//    private String getTerm() {
+//        LocalDate now = LocalDate.now();
+//        int month = now.getMonthValue();
+//        if (month <= 6) {
+//            return "0";
+//        }
+//        return "1";
+//    }
 
-
-
-    public int accept(Message oldMessage,Message newMessage)
-    {
-        int result = messageMapper.updateFlag(oldMessage, 1);
-
+    public int accept(Message message)  {
+//        int result = messageMapper.updateFlag(message.getId(), 1);
+//        if (result == 0) return 0;
+        message.setFlag(1);
         Date currentDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = sdf.format(currentDate);
-        newMessage.setTextTim(dateString);
+        message.setReceiveTime(sdf.format(currentDate));
 
-        String school = oldMessage.getSendAccount().substring(3, 5);
-        String year = oldMessage.getYear();
+        String major = message.getSendAccount().substring(3, 5);
+        String year = message.getGrade();
+        String term = message.getTerm();
+        String courseId = generateCourseId(message.getCourseName(), major, year, term);
+        message.setCourseId(courseId);
 
-        String courseId = generateCourseId( oldMessage.getName(), school, year);
-
-        //生成课程号
-        newMessage.setCourseId(courseId);
-        result = messageMapper.adminInsert(newMessage);
-
-        Course course = new Course();
-        course.setCourseId(courseId);
-        course.setName(oldMessage.getName());
-        course.setTeacherId(oldMessage.getSendAccount());
-        course.setTeacherName(teacherMapper.checkById(oldMessage.getSendAccount()).getName());
-        course.setTim(oldMessage.getTim());
-        course.setRoom(oldMessage.getRoom());
-        course.setCapacity(oldMessage.getCapcity());
-        course.setCredits(oldMessage.getCredits());
-        course.setSelectedCount(0);
+        if (messageMapper.update(message) == 0) return 0;
 
         //添加课程
-        result = courseMapper.insert(course);
+        Course course = new Course();
 
-        return result;
+        course.setCourseId(courseId);
+        course.setName(message.getCourseName());
+        course.setTeacherId(message.getSendAccount());
+        course.setTeacherName(teacherMapper.checkById(message.getSendAccount()).getName());
+        course.setTim(message.getTim());
+        course.setRoom(message.getRoom());
+        course.setCapacity(message.getCapacity());
+        course.setCredits(message.getCredits());
+        course.setSelectedCount(0);
+
+        return courseMapper.insert(course);
     }
-    public int deny(Message oldMessage,Message newMessage)
-    {
-        int result = messageMapper.updateFlag(oldMessage, 2);
-
+    public int deny(Message message) {
+        // int result = messageMapper.updateFlag(message.getId(), 2);
+        // if (result == 0) return 0;
+        message.setFlag(2);
         Date currentDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = sdf.format(currentDate);
-        newMessage.setTextTim(dateString);
+        message.setReceiveTime(sdf.format(currentDate));
 
-        result = messageMapper.adminInsert(newMessage);
-        return result;
+        return messageMapper.update(message);
     }
 
 }

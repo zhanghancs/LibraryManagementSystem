@@ -79,17 +79,16 @@ public class TeacherService {
 //        return rowsAffected > 0 ? 1 : 0;
 //    }
     public int submitCourse(Message message) {
-        int rowsAffected = messageMapper.teacherInsert(message);
-        return rowsAffected > 0 ? 1 : 0;
+        return messageMapper.insert(message);
     }
     //查看消息
     public List<Message> checkSentMessage(String sendAccount) {
         return messageMapper.checkBySender(sendAccount);
     }
 
-    public List<Message> checkReceivedMessage(String receiveAccount) {
-        return messageMapper.checkByReceiver(receiveAccount);
-    }
+//    public List<Message> checkReceivedMessage(String receiveAccount) {
+//        return messageMapper.checkByReceiver(receiveAccount);
+//    }
 
 
 //    public int save(Teacher teacher) {
