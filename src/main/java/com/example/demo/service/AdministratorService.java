@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.*;
+import com.example.demo.entity.dto.StudentList;
+import com.example.demo.entity.dto.TeacherList;
 import com.example.demo.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class AdministratorService {
@@ -79,18 +80,18 @@ public class AdministratorService {
         return teacherMapper.removeById(teacherId);
     }
 
-    public int saveTeachers(List<Teacher> teachers) {
+    public int saveTeachers(TeacherList teacherList) {
         int ans = 0;
-        for (Teacher teacher : teachers) {
+        for (Teacher teacher : teacherList.getTeacherList()) {
             ans += 1;
             if ( 0 == saveTeacher(teacher)) return 0;
         }
         return ans;
     }
 
-    public int saveStudents(List<Student> students) {
+    public int saveStudents(StudentList studentList) {
         int ans = 0;
-        for (Student student : students) {
+        for (Student student : studentList.getStudentList()) {
             ans += 1;
             if ( 0 == saveStudent(student)) return 0;
         }

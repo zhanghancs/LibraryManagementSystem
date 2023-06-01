@@ -1,8 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.*;
+import com.example.demo.entity.dto.StudentList;
+import com.example.demo.entity.dto.TeacherList;
 import com.example.demo.service.AdministratorService;
-import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +36,8 @@ public class AdministratorController {
     }
 
     @PostMapping("/saveStudents")
-    public int saveStudents(@RequestBody List<Student> students) {
-        return administratorService.saveStudents(students);
+    public int saveStudents(@RequestBody StudentList studentList) {
+        return administratorService.saveStudents(studentList);
     }
     @DeleteMapping("/deleteStudent/{studentId}")
     public int deleteStudent(@PathVariable String studentId) {
@@ -49,8 +50,8 @@ public class AdministratorController {
     }
 
     @PostMapping("/saveTeachers")
-    public int saveTeachers(@RequestBody List<Teacher> teachers) {
-        return administratorService.saveTeachers(teachers);
+    public int saveTeachers(@RequestBody TeacherList teacherList) {
+        return administratorService.saveTeachers(teacherList);
     }
 
     @PostMapping("/deleteTeacher/{teacherId}")

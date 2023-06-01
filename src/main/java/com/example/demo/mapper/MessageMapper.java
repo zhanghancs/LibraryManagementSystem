@@ -40,8 +40,8 @@ public interface MessageMapper {
 //           "#{flag},#{courseId},#{courseName},#{year},#{capcity},#{credits},#{tim},#{room},#{textTim})")
 //    int adminInsert(Message message);
 
-    @Insert("insert into message(sendAccount,receiveAccount,flag,courseId,courseName,grade,term," +
-            "capacity,credits,tim,room,sendTime,receiveTime)values(#{sendAccount}, #{receiveAccount},#{flag}," +
+    @Insert("insert into message(sendAccount,receiveAccount,flag,teacherName,courseId,courseName,grade,term," +
+            "capacity,credits,tim,room,sendTime,receiveTime)values(#{sendAccount}, #{receiveAccount},#{flag},#{teacherName}," +
             "#{courseId},#{courseName},#{grade},#{term},#{capacity},#{credits},#{tim},#{room},#{sendTime},#{receiveTime})")
     int insert(Message message);
 
