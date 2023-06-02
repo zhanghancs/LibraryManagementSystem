@@ -24,7 +24,7 @@ public interface StudentMapper {
             "VALUES(#{studentId}, #{name},#{password},#{idNumber},#{selectedCredits},#{earnedCredits})")
     int insert(Student student);
 
-    @Delete("delete from student where studentId = #{studentId} ")
+    @Delete("delete from student where studentId = #{studentId}")
     int removeById(String studentId);
 
     @Update("update student set selectedCredits=selectedCredits+#{num} where studentId = #{studentId}")

@@ -15,8 +15,8 @@
             <if test="idNumber != null">
                 idNumber = #{idNumber},
             </if>
-            <if test="chosenCredits != null">
-                chosenCredits = #{chosenCredits},
+            <if test="selectedCredits != null">
+                selectedCredits = #{selectedCredits},
             </if>
             <if test="earnedCredits != null">
                 earnedCredits = #{earnedCredits},

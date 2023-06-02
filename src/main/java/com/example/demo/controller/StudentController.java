@@ -28,5 +28,9 @@ public class StudentController {
     }
 
 
+    @GetMapping("/checkCredits/{studentId}")
+    public double checkCredits(@PathVariable String studentId) {
+        return studentService.checkCredits(studentId);
+    }
 
 }

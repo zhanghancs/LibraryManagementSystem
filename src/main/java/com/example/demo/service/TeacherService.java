@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TeacherService {
@@ -105,6 +104,37 @@ public class TeacherService {
         return messageMapper.checkBySender(sendAccount);
     }
 
+    public List<String> checkFreeTime(String teacherId, String start) {
+        List<String> times = generateTimes(start);
+        List<Course> courses = checkCourse(teacherId);
+        for (Course course : courses) {
+            times.removeIf(tim -> conflict(tim, course.getTim()));
+        }
+        return times;
+    }
+    private List<String> generateTimes(String start) {
+        List<String> week = new ArrayList<>(Arrays.asList("周一", "周二", "周三", "周四", "周五"));
+        List<String> tim = new ArrayList<>(Arrays.asList("1-2", "2-4", "3-4", "3-5", "6-7", "8-9", "6-8"));
+        List<String> result = new ArrayList<>();
+        for (String w : week) {
+            for (String t : tim) {
+                String now = w + " " + t;
+                if (now.startsWith(start)) result.add(now);
+            }
+        }
+        return result;
+    }
+    private boolean conflict(String tim1, String tim2) {
+        if (tim1.charAt(1) == tim2.charAt(1)) {
+            if (tim1.charAt(3) <= tim2.charAt(5) && tim1.charAt(3) >= tim2.charAt(3)) {
+                return true;
+            }
+            if (tim1.charAt(5) <= tim2.charAt(5) && tim1.charAt(5) >= tim2.charAt(3)) {
+                return true;
+            }
+        }
+        return false;
+    }
 //    public List<Message> checkReceivedMessage(String receiveAccount) {
 //        return messageMapper.checkByReceiver(receiveAccount);
 //    }

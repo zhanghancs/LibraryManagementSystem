@@ -1,10 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.entity.Message;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -49,4 +46,6 @@ public interface MessageMapper {
             " receiveTime = #{receiveTime}, flag = #{flag} where id = #{id}")
     int update(Message message);
 
+    @Delete("delete from message where sendAccount = #{teacherId}")
+    int deleteByTeacherId(String teacherId);
 }

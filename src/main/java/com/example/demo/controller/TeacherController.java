@@ -70,7 +70,12 @@ public class TeacherController {
     }
     @GetMapping({"/checkSentMessage/{teacherId}"})
     public List<Message> checkSentMessage(@PathVariable String teacherId) {
-        return this.teacherService.checkSentMessage(teacherId);
+        return teacherService.checkSentMessage(teacherId);
+    }
+
+    @GetMapping({"/checkFreeTime/{teacherId}/{start}"})
+    public List<String> checkFreeTime(@PathVariable String teacherId, @PathVariable String start) {
+        return teacherService.checkFreeTime(teacherId, start);
     }
 
 

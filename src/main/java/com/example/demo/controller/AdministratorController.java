@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.*;
 import com.example.demo.entity.dto.StudentList;
 import com.example.demo.entity.dto.TeacherList;
+import com.example.demo.entity.dto.AdministratorList;
 import com.example.demo.service.AdministratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,13 @@ public class AdministratorController {
         return administratorService.insert(administrator);
     }
 
+    @DeleteMapping("/deleteAdmin/{adminId}")
+    public int deleteAdmin(@PathVariable String adminId) { return administratorService.deleteAdmin(adminId);}
+
+    @PostMapping("/saveAdmins")
+    public int saveAdmins(@RequestBody List<Administrator> administratorList) {
+        return administratorService.saveAdmins(administratorList);
+    }
     @PostMapping("/saveCourse")
     public int saveCourse(@RequestBody Course course) {
         return administratorService.saveCourse(course);
@@ -35,8 +43,12 @@ public class AdministratorController {
         return administratorService.saveStudent(student);
     }
 
+//    @PostMapping("/saveStudents")
+//    public int saveStudents(@RequestBody StudentList studentList) {
+//        return administratorService.saveStudents(studentList);
+//    }
     @PostMapping("/saveStudents")
-    public int saveStudents(@RequestBody StudentList studentList) {
+    public int saveStudents(@RequestBody List<Student> studentList) {
         return administratorService.saveStudents(studentList);
     }
     @DeleteMapping("/deleteStudent/{studentId}")
@@ -50,11 +62,11 @@ public class AdministratorController {
     }
 
     @PostMapping("/saveTeachers")
-    public int saveTeachers(@RequestBody TeacherList teacherList) {
+    public int saveTeachers(@RequestBody List<Teacher> teacherList) {
         return administratorService.saveTeachers(teacherList);
     }
 
-    @PostMapping("/deleteTeacher/{teacherId}")
+    @DeleteMapping("/deleteTeacher/{teacherId}")
     public int deleteTeacher(@PathVariable String teacherId) {
         return administratorService.deleteTeacher(teacherId);
     }

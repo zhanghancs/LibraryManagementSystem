@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.*;
+import com.example.demo.entity.dto.AdministratorList;
 import com.example.demo.entity.dto.StudentList;
 import com.example.demo.entity.dto.TeacherList;
 import com.example.demo.mapper.*;
@@ -26,7 +27,8 @@ public class AdministratorService {
     StudentMapper studentMapper;
     @Autowired
     MessageMapper messageMapper;
-
+    @Autowired
+    EnrollmentMapper enrollmentMapper;
 
     public int insert(Administrator administrator) {
         if (!isValidId(administrator.getId())) return 0;
@@ -55,6 +57,7 @@ public class AdministratorService {
     }
     public int deleteCourse(String id) {
         if (courseMapper.checkById(id) == null) return 0;
+        enrollmentMapper.deleteCourse(id);
         return courseMapper.deleteById(id);
     }
     public int saveStudent(Student student) {
@@ -66,6 +69,7 @@ public class AdministratorService {
     }
     public int deleteStudent(String studentId) {
         if (studentMapper.checkById(studentId) == null) return 0;
+        enrollmentMapper.deleteStudent(studentId);
         return studentMapper.removeById(studentId);
     }
     public int saveTeacher(Teacher teacher) {
@@ -77,21 +81,26 @@ public class AdministratorService {
     }
     public int deleteTeacher(String teacherId) {
         if (teacherMapper.checkById(teacherId) == null) return 0;
+        messageMapper.deleteByTeacherId(teacherId);
+        List<Course> courses = courseMapper.checkByTeacherId(teacherId);
+        for (Course course : courses) {
+            deleteCourse(course.getCourseId());
+        }
         return teacherMapper.removeById(teacherId);
     }
 
-    public int saveTeachers(TeacherList teacherList) {
+    public int saveTeachers(List<Teacher> teacherList) {
         int ans = 0;
-        for (Teacher teacher : teacherList.getTeacherList()) {
+        for (Teacher teacher : teacherList) {
             ans += 1;
             if ( 0 == saveTeacher(teacher)) return 0;
         }
         return ans;
     }
 
-    public int saveStudents(StudentList studentList) {
+    public int saveStudents(List<Student> studentList) {
         int ans = 0;
-        for (Student student : studentList.getStudentList()) {
+        for (Student student : studentList) {
             ans += 1;
             if ( 0 == saveStudent(student)) return 0;
         }
@@ -282,6 +291,17 @@ public class AdministratorService {
         return false;
     }
 
+    public int saveAdmins(List<Administrator> administratorList) {
+        int ans = 0;
+        for (Administrator administrator : administratorList) {
+            ans += insert(administrator);
+        }
+        return ans;
+    }
+
+    public int deleteAdmin(String adminId) {
+        return administratorMapper.deleteAdmin(adminId);
+    }
 
 
 //    public List<Message> checkAllMessage() {
