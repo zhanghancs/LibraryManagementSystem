@@ -303,6 +303,10 @@ public class AdministratorService {
         return administratorMapper.deleteAdmin(adminId);
     }
 
+    public List<Administrator> checkAll() {
+        return administratorMapper.checkAll();
+    }
+
 
 //    public List<Message> checkAllMessage() {
 //        return messageMapper.checkAll();

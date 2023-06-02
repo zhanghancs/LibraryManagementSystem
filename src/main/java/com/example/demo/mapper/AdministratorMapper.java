@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface AdministratorMapper {
     @Insert("insert into administrator(id, name, password, idNumber) " +
@@ -17,4 +19,7 @@ public interface AdministratorMapper {
 
     @Delete("delete from administrator where id = #{adminId}")
     int deleteAdmin(String adminId);
+
+    @Select("select * from administrator")
+    List<Administrator> checkAll();
 }

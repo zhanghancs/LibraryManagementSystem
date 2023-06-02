@@ -28,6 +28,11 @@ public class AdministratorController {
     public int saveAdmins(@RequestBody List<Administrator> administratorList) {
         return administratorService.saveAdmins(administratorList);
     }
+    @GetMapping("/checkAll")
+    public List<Administrator> checkAll() {
+        return administratorService.checkAll();
+    }
+
     @PostMapping("/saveCourse")
     public int saveCourse(@RequestBody Course course) {
         return administratorService.saveCourse(course);
